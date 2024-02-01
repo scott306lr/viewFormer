@@ -34,3 +34,12 @@ def get_model_layers(model, match_names=None, match_types=None, prefix=''):
             if match_types is None or match_string(type(module).__name__, match_types):
                 matching_layers.append((f'{prefix}{name}', module))
     return matching_layers
+
+
+def get_layer_weights(layer, match_names=None, match_types=None, prefix=''):
+    matching_weights = []
+    for name, param in layer.named_parameters():
+        if match_names is None or match_string(name, match_names):
+            if match_types is None or match_string(type(param).__name__, match_types):
+                matching_weights.append((f'{prefix}{name}', param))
+    return matching_weights
