@@ -25,3 +25,6 @@ var/
 
 # Dev
 venv
+
+# generated pngs
+*.png
