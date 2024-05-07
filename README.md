@@ -18,9 +18,8 @@ all_layers = get_model_layers(model)
 layer_names = [f'blocks.0.attn.qkv', f'blocks.0.mlp.fc1', f'blocks.0.mlp.fc2']
 block0_layers = get_model_layers(model, match_names=layer_names, match_types=['Linear'])
 
-# To get the weights of a layer, you can either: (returns a list of tensors)
+# To get the weights of a layer:
 block0_qkv = block0_layers[0][1]
-
 weight = block0_qkv.weight # get weight parameter
 weights = get_layer_weights(layer) # or use get_layer_weights function, if there are many paramameters in a layer (returns a list of tuples with the parameter name and the parameter tensor)
 ```
