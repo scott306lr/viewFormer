@@ -30,6 +30,7 @@ To get the activations of a layer, we provide a HookHandler class that wraps aro
 
 ```python
 from viewFormer.hooks import HookHandler, get_act_func, get_avg_act_func
+from viewFormer.data import calibrate
 
 # initialize HookHandler and the dictionary to store the outputs
 handler = HookHandler()
