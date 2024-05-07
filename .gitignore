@@ -28,3 +28,6 @@ venv
 
 # generated pngs
 *.png
+
+# datasets and models
+cifar-*

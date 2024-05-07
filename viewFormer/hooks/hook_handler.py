@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 
+from ..utils import absmax
 
 class HookHandler:
     def __init__(self):
@@ -39,10 +40,21 @@ def get_act_func(new_val: torch.Tensor, _):
 
 
 def get_avg_act_func(new_val: torch.Tensor, existing_val):
-    total, avg = existing_val.get("total", 0), existing_val.get("avg", 0)
+    if existing_val is None:
+        avg = new_val.cpu().detach().numpy().sum(axis=0) / total_cnt
+        total_cnt = new_val.shape[0]
 
-    total += new_val.shape[0]
-    avg = (avg * (total - new_val.shape[0]) +
-           new_val.cpu().detach().numpy().sum(axis=0)) / total
+    else:
+        total_cnt, avg = existing_val.get("total_cnt"), existing_val.get("value")
+        avg = (avg * total_cnt + new_val.cpu().detach().numpy().sum(axis=0)) / (total_cnt + new_val.shape[0])
+        total_cnt += new_val.shape[0]
 
-    return {"total": total, "avg": avg}
+    return {"total_cnt": total_cnt, "value": avg}
+
+def get_absmax_act_func(new_val: torch.Tensor, existing_val):
+    new_absmax = absmax(new_val.cpu().detach().numpy(), axis=0)
+    if existing_val is None:
+        value = new_absmax
+    else:
+        value = absmax(np.stack([existing_val, new_absmax], axis=0), axis=0)
+    return value
