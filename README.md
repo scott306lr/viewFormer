@@ -44,7 +44,7 @@ handler.create_hooks(block0_layers, get_act_func, layer_outputs)
 
 # calibrate the model and record the outputs
 with torch.autocast(device_type="cuda"):
-    calibrate(model, list(test_loader)[:256])
+    calibrate(model, list(train_loader)[:256])
 
 # remove the hooks
 handler.remove_hooks()
