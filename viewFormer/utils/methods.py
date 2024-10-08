@@ -1,6 +1,7 @@
 import numpy as np
 from skimage.measure import block_reduce
 
+from torch.nn.functional import max_pool1d, min_pool1d
 
 def absmax(data, axis=None):
     p_data = data.max(axis=axis)
@@ -13,8 +14,15 @@ def absmax_reduce(data, kernel_size=1, axis=None):
         matrix = absmax(data, axis=axis)
     else:
         matrix = data
-    p_data = block_reduce(matrix, block_size=kernel_size, func=np.max)
-    n_data = block_reduce(matrix, block_size=kernel_size, func=np.min)
+
+    # use normal reduce if kernel_size is 1
+    if kernel_size == 1:
+        p_data = np.max(matrix, axis=axis)
+        n_data = np.min(matrix, axis=axis)
+    else:
+        p_data = block_reduce(matrix, block_size=kernel_size, func=np.max)
+        n_data = block_reduce(matrix, block_size=kernel_size, func=np.min)
+
     return np.where(abs(p_data) > abs(n_data), p_data, n_data)
 
 
